@@ -82,22 +82,21 @@ PHP_FUNCTION(randomString)
 	struct timeval tv;
 	struct timezone tz;
 
-	result = (char *) emalloc(len + 1);
 
 	if (zend_parse_parameters(argc TSRMLS_CC, "l", &len) == FAILURE) 
 		return;
-
+	result = (char *) emalloc(len + 1);
 	tmp = result;
 	gettimeofday(&tv, &tz);
 
-    srand(tv.tv_sec+tv.tv_usec);
+    srand((unsigned int) tv.tv_sec+tv.tv_usec);
 	for(int i=0; i<len; i++) {
-	    memcpy(tmp, select_string+rand()%62, 1);
+	    memcpy(tmp, &select_string[rand()%62], 1);
 	    tmp++;
 	}
 	*tmp = '\0';
 
-    RETURN_STRINGL(result, len, 0);	
+    RETURN_STRINGL(result, len+1, 0);	
 }
 /* }}} */
 
